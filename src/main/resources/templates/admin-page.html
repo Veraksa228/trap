@@ -2,13 +2,13 @@
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>user</title>
+    <title>admin</title>
 </head>
 <body>
-<h1> User </h1>
+<form action="/admin/showUser" method="get">
+    <input type="submit" value="show user">
 
-<p th:text="HI + ' твой логин' + ' '+ ${user.getLogin()}"></p>
-
+</form>
 <div th:replace="fragments/logout :: logoutForm"></div>
 </body>
 </html>
