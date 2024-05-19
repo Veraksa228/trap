@@ -2,10 +2,12 @@ package ru.kata.spring.boot_security.demo.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.DAO.UserDao;
@@ -19,18 +21,25 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class UserServiceImlp implements UserService {
-    private UserDao userDao;
+    private final UserDao userDao;
 
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImlp(UserDao userDao) {
+    public UserServiceImlp(UserDao userDao, @Lazy PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
+
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     @Transactional
     public void add(User user) {
-        userDao.add(user);
+        User newUser = new User();
+        newUser.setId(user.getId());
+        newUser.setLogin(user.getLogin());
+        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        userDao.add(newUser);
     }
 
     @Override
