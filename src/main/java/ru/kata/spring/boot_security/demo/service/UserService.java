@@ -1,7 +1,6 @@
 package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.entities.Role;
 import ru.kata.spring.boot_security.demo.entities.User;
 
@@ -9,17 +8,17 @@ import java.util.List;
 import java.util.Set;
 
 public interface UserService extends UserDetailsService {
-    @Transactional
-    public void add(User user);
 
-    public void add(User user, Set<Role> roles);
-    @Transactional
-    public void removeUser(User user);
+    void add(User user);
 
-    public List<User> getUsers();
+    void add(User user, Set<Role> roles);
 
-    public User findUser(Long id);
+    void removeUser(User user);
 
-    @Transactional
-    public void updateUser(User user);
+    List<User> getUsers();
+
+    User findUser(Long id);
+
+
+    void updateUser(User user);
 }

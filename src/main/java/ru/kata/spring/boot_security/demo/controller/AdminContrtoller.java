@@ -6,16 +6,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.entities.User;
-import ru.kata.spring.boot_security.demo.service.UserServiceImlp;
+import ru.kata.spring.boot_security.demo.service.UserService;
 
 @Controller
 @RequestMapping("/admin")
 @Slf4j
 public class AdminContrtoller {
-    private final UserServiceImlp userService;
+    private final UserService userService;
 
     @Autowired
-    public AdminContrtoller(UserServiceImlp userService) {
+    public AdminContrtoller(UserService userService) {
         this.userService = userService;
     }
 
@@ -29,7 +29,7 @@ public class AdminContrtoller {
         return "admin-page";
     }
 
-    @GetMapping("/showUser")
+    @GetMapping("/show-user")
     public String showUser(Model model) {
         model.addAttribute("users", userService.getUsers());
         model.addAttribute("newUser", new User());
@@ -40,14 +40,14 @@ public class AdminContrtoller {
     public String newUser(@ModelAttribute("user") User user) {
         log.info(user.getPassword());
         userService.add(user);
-        return "redirect:/admin/showUser";
+        return "redirect:/admin/show-user";
     }
 
     @PostMapping("/remove")
     public String removeUser(@RequestParam("userId") Long id) {
         User user = userService.findUser(id);
         userService.removeUser(user);
-        return "redirect:/admin/showUser";
+        return "redirect:/admin/show-user";
     }
 
     @GetMapping("/update")
@@ -61,7 +61,7 @@ public class AdminContrtoller {
     public String updateUser(@ModelAttribute("user") User user) {
 
         userService.updateUser(user);
-        return "redirect:/admin/showUser";
+        return "redirect:/admin/show-user";
     }
 
 }

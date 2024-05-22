@@ -22,13 +22,13 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @Transactional
-public class UserServiceImlp implements UserService {
+public class UserServiceImpl implements UserService {
     private final UserDao userDao;
 
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImlp(UserDao userDao, @Lazy PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserDao userDao, @Lazy PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
 
         this.passwordEncoder = passwordEncoder;
@@ -43,6 +43,7 @@ public class UserServiceImlp implements UserService {
         newUser.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.add(newUser);
     }
+
     @Override
     @Transactional
     public void add(User user, Set<Role> roles) {
@@ -67,7 +68,7 @@ public class UserServiceImlp implements UserService {
 
     @Override
     public User findUser(Long id) {
-        return userDao.findUser(id);
+        return userDao.findUserById(id);
     }
 
     @Override
@@ -79,7 +80,7 @@ public class UserServiceImlp implements UserService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userDao.findUser(username);
+        User user = userDao.findUserByLogin(username);
         if (user == null) {
             throw new UsernameNotFoundException("UserNotFound");
         }
