@@ -2,11 +2,14 @@ package ru.kata.spring.boot_security.demo.DAO;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+import ru.kata.spring.boot_security.demo.entities.Role;
 import ru.kata.spring.boot_security.demo.entities.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Repository
@@ -15,9 +18,18 @@ public class UserDaoImpl implements UserDao {
     private EntityManager entityManager;
 
     @Override
+
     public void add(User user) {
         entityManager.persist(user);
-        log.info("Add user");
+        log.info("Add user ==="+ user.toString() + "!!!!!!!! " + user.getRoles());
+    }
+    public void add(User user, Set<Role> roles){
+        User newUser = new User();
+        newUser.setId(user.getId());
+        newUser.setLogin(user.getLogin());
+        newUser.setPassword(user.getPassword());
+        newUser.setRoles(roles);
+        entityManager.merge(newUser);
     }
 
     @Override

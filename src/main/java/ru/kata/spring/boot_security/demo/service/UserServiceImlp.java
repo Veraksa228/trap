@@ -16,10 +16,12 @@ import ru.kata.spring.boot_security.demo.entities.User;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@Transactional
 public class UserServiceImlp implements UserService {
     private final UserDao userDao;
 
@@ -39,6 +41,16 @@ public class UserServiceImlp implements UserService {
         newUser.setId(user.getId());
         newUser.setLogin(user.getLogin());
         newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        userDao.add(newUser);
+    }
+    @Override
+    @Transactional
+    public void add(User user, Set<Role> roles) {
+        User newUser = new User();
+        newUser.setId(user.getId());
+        newUser.setLogin(user.getLogin());
+        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        newUser.setRoles(roles);
         userDao.add(newUser);
     }
 
@@ -73,7 +85,7 @@ public class UserServiceImlp implements UserService {
         }
         return new org.springframework.security.core.userdetails.User(user.getLogin(),
                 user.getPassword(),
-                mapRolesToAutho(user.getRoleList()));
+                mapRolesToAutho(user.getRoles()));
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAutho(Collection<Role> roles) {
