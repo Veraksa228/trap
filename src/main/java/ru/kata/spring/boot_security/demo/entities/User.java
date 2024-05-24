@@ -1,13 +1,12 @@
 package ru.kata.spring.boot_security.demo.entities;
 
-import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -31,7 +30,7 @@ public class User {
     @Column(name = "age")
     private byte age;
 
-    @Column(name = "email",unique = true)
+    @Column(name = "email", unique = true)
     private String email; //
 
     @Column(name = "password")

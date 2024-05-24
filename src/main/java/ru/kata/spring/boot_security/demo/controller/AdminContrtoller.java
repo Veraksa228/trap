@@ -23,19 +23,14 @@ public class AdminContrtoller {
         this.userService = userService;
         this.roleService = roleService;
     }
-
-//    @GetMapping("/*")
-//    public String adminStartPage() {
-//        return "admin-page";
-//    }
-@GetMapping(value = "")
-public String getAdminPage(Model model, Principal principal) {
-    model.addAttribute("user", userService.getUserByEmail(principal.getName()));
-    model.addAttribute("users", userService.getAllUsers());
-    model.addAttribute("roles", roleService.getAllRoles());
-    model.addAttribute("emptyUser", new User());
-    return "/admin";
-}
+    @GetMapping(value = "")
+    public String getAdminPage(Model model, Principal principal) {
+        model.addAttribute("user", userService.getUserByEmail(principal.getName()));
+        model.addAttribute("users", userService.getAllUsers());
+        model.addAttribute("roles", roleService.getAllRoles());
+        model.addAttribute("emptyUser", new User());
+        return "/admin";
+    }
 
     @PostMapping("/addUser")
     public String createUser(@ModelAttribute("emptyUser") User user,

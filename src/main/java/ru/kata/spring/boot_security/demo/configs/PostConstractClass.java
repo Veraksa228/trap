@@ -53,7 +53,7 @@ public class PostConstractClass {
         user.setEmail("user.mail.ru");
         user.setPassword("123");
         user.setRoles(rolesForUser);
-        userService.add(user,rolesForUser);
+        userService.add(user, rolesForUser);
         userService.add(admin, roles);
     }
 }

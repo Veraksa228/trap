@@ -22,7 +22,7 @@ public interface UserDao {
     User getUserByEmail(String name);
 
 
-    void updateUser(long id,User updatedUser);
+    void updateUser(long id, User updatedUser);
 
     void add(User user, Set<Role> roles);
 

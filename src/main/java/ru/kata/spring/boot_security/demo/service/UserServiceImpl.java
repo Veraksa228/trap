@@ -33,9 +33,10 @@ public class UserServiceImpl implements UserService {
 
         this.passwordEncoder = passwordEncoder;
     }
+
     @Override
-    public User getUserByEmail(String name){
-       return userDao.getUserByEmail(name);
+    public User getUserByEmail(String name) {
+        return userDao.getUserByEmail(name);
     }
 
     @Override
@@ -49,7 +50,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void add(User user, Set<Role> roles) {
-user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(roles);
         userDao.add(user);
     }
@@ -71,11 +72,10 @@ user.setPassword(passwordEncoder.encode(user.getPassword()));
     }
 
 
-
     @Override
     @Transactional
-    public void updateUser(long id,User user) {
-        userDao.updateUser(id,user);
+    public void updateUser(long id, User user) {
+        userDao.updateUser(id, user);
     }
 
     @Override
