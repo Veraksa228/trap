@@ -13,16 +13,16 @@ public interface UserDao {
     void removeUser(User user);
 
 
-    List<User> getUsers();
+    List<User> getAllUsers();
 
 
     User findUserById(Long id);
 
 
-    User findUserByLogin(String name);
+    User getUserByEmail(String name);
 
 
-    void updateUser(User updatedUser);
+    void updateUser(long id,User updatedUser);
 
     void add(User user, Set<Role> roles);
 

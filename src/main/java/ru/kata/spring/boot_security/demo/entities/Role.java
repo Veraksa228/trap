@@ -1,7 +1,6 @@
 package ru.kata.spring.boot_security.demo.entities;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -9,30 +8,36 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-@Entity
-@Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Entity
 @Table(name = "roles")
-public class Role implements GrantedAuthority {
+public class Role {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "role_name")
+    private String roleName;
 
-    @ManyToMany(mappedBy = "roles")
+    public Role(String roleName) {
+        this.roleName = roleName;
+    }
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "roles")
     private Set<User> users = new HashSet<>();
 
     @Override
-    public String getAuthority() {
-        return name;
-    }
+    public String toString() {
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
+        if (roleName.length() > 5) {
+            return "Role{id=" + id + ", name='" + roleName.substring(0, 5) + "'}";
+        } else {
+            return "Role{id=" + id + ", name='" + roleName + "'}";
+        }
     }
-
 
 }

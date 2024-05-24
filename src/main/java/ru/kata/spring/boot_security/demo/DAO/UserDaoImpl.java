@@ -19,14 +19,14 @@ public class UserDaoImpl implements UserDao {
     @Override
 
     public void add(User user) {
-        entityManager.persist(user);
+        entityManager.merge(user);
         log.info("Add user ===" + user.toString() + "!!!!!!!! " + user.getRoles());
     }
 
     public void add(User user, Set<Role> roles) {
         User newUser = new User();
         newUser.setId(user.getId());
-        newUser.setLogin(user.getLogin());
+        newUser.setEmail(user.getEmail());
         newUser.setPassword(user.getPassword());
         newUser.setRoles(roles);
         entityManager.merge(newUser);
@@ -41,7 +41,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
 
-    public List<User> getUsers() {
+    public List<User> getAllUsers() {
         return entityManager.createQuery("SELECT u FROM User u ", User.class).getResultList();
     }
 
@@ -51,16 +51,23 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User findUserByLogin(String name) {
-        User user = entityManager.createQuery("SELECT u FROM User u WHERE u.login = :name", User.class)
+    public User getUserByEmail(String name) {
+        User user = entityManager.createQuery("SELECT u FROM User u WHERE u.email = :name", User.class)
                 .setParameter("name", name)
                 .getSingleResult();
-        log.info("user " + user.getId());
+
         return user;
     }
 
     @Override
-    public void updateUser(User updatedUser) {
-        entityManager.merge(updatedUser);
+    public void updateUser(long id,User user) {
+        User userToUpdate = findUserById(id);
+        userToUpdate.setFirstName(user.getFirstName());
+        userToUpdate.setLastName(user.getLastName());
+        userToUpdate.setEmail(user.getEmail());
+        userToUpdate.setAge(user.getAge());
+        userToUpdate.setRoles(user.getRoles());
+
+        entityManager.merge(userToUpdate);
     }
 }

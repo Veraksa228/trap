@@ -33,26 +33,25 @@ public class UserServiceImpl implements UserService {
 
         this.passwordEncoder = passwordEncoder;
     }
+    @Override
+    public User getUserByEmail(String name){
+       return userDao.getUserByEmail(name);
+    }
 
     @Override
     @Transactional
     public void add(User user) {
-        User newUser = new User();
-        newUser.setId(user.getId());
-        newUser.setLogin(user.getLogin());
-        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
-        userDao.add(newUser);
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userDao.add(user);
     }
 
     @Override
     @Transactional
     public void add(User user, Set<Role> roles) {
-        User newUser = new User();
-        newUser.setId(user.getId());
-        newUser.setLogin(user.getLogin());
-        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
-        newUser.setRoles(roles);
-        userDao.add(newUser);
+user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRoles(roles);
+        userDao.add(user);
     }
 
     @Override
@@ -62,8 +61,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getUsers() {
-        return userDao.getUsers();
+    public List<User> getAllUsers() {
+        return userDao.getAllUsers();
     }
 
     @Override
@@ -71,27 +70,29 @@ public class UserServiceImpl implements UserService {
         return userDao.findUserById(id);
     }
 
+
+
     @Override
     @Transactional
-    public void updateUser(User user) {
-        userDao.updateUser(user);
+    public void updateUser(long id,User user) {
+        userDao.updateUser(id,user);
     }
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userDao.findUserByLogin(username);
+        User user = userDao.getUserByEmail(username);
         if (user == null) {
             throw new UsernameNotFoundException("UserNotFound");
         }
-        return new org.springframework.security.core.userdetails.User(user.getLogin(),
+        return new org.springframework.security.core.userdetails.User(user.getEmail(),
                 user.getPassword(),
                 mapRolesToAutho(user.getRoles()));
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAutho(Collection<Role> roles) {
         Collection<? extends GrantedAuthority> authorities = roles.stream()
-                .map(r -> new SimpleGrantedAuthority("ROLE_" + r.getName()))
+                .map(r -> new SimpleGrantedAuthority("ROLE_" + r.getRoleName()))
                 .collect(Collectors.toList());
         log.info("ROLES " + authorities);
         return authorities;

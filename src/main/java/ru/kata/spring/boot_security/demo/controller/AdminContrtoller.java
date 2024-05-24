@@ -6,62 +6,64 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.entities.User;
+import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
+
+import java.security.Principal;
 
 @Controller
 @RequestMapping("/admin")
 @Slf4j
 public class AdminContrtoller {
     private final UserService userService;
+    private final RoleService roleService;
 
     @Autowired
-    public AdminContrtoller(UserService userService) {
+    public AdminContrtoller(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
-    @GetMapping("/*")
-    public String adminStartPage() {
-        return "admin-page";
-    }
+//    @GetMapping("/*")
+//    public String adminStartPage() {
+//        return "admin-page";
+//    }
+@GetMapping(value = "")
+public String getAdminPage(Model model, Principal principal) {
+    model.addAttribute("user", userService.getUserByEmail(principal.getName()));
+    model.addAttribute("users", userService.getAllUsers());
+    model.addAttribute("roles", roleService.getAllRoles());
+    model.addAttribute("emptyUser", new User());
+    return "/admin";
+}
 
-    @GetMapping()
-    public String showAdmin() {
-        return "admin-page";
-    }
+    @PostMapping("/addUser")
+    public String createUser(@ModelAttribute("emptyUser") User user,
+                             @RequestParam(value = "checkedRoles") String[] selectResult) {
+        for (String s : selectResult) {
 
-    @GetMapping("/show-user")
-    public String showUser(Model model) {
-        model.addAttribute("users", userService.getUsers());
-        model.addAttribute("newUser", new User());
-        return "admin-page-showusers";
-    }
-
-    @PostMapping("/new-user")
-    public String newUser(@ModelAttribute("user") User user) {
-        log.info(user.getPassword());
+            user.addRole(roleService.getRoleByName("ROLE_" + s));
+        }
         userService.add(user);
-        return "redirect:/admin/show-user";
+        return "redirect:/admin";
     }
 
-    @PostMapping("/remove")
-    public String removeUser(@RequestParam("userId") Long id) {
-        User user = userService.findUser(id);
+    @GetMapping("/delete/{id}")
+    public String deleteUser(@PathVariable("id") long id) {
+        User user = new User();
+        user.setId(id);
         userService.removeUser(user);
-        return "redirect:/admin/show-user";
+        return "redirect:/admin";
     }
 
-    @GetMapping("/update")
-    public String showUpdateForm(@RequestParam("userId") Long userId, Model model) {
-        User user = userService.findUser(userId);
-        model.addAttribute("user", user);
-        return "update";
-    }
-
-    @PostMapping("/update")
-    public String updateUser(@ModelAttribute("user") User user) {
-
-        userService.updateUser(user);
-        return "redirect:/admin/show-user";
+    @PostMapping("/updateUser/{id}")
+    public String updateUser(@ModelAttribute("emptyUser") User user, @PathVariable("id") Long id,
+                             @RequestParam(value = "userRolesSelector") String[] selectResult) throws Exception {
+        for (String s : selectResult) {
+            user.addRole(roleService.getRoleByName("ROLE_" + s));
+        }
+        userService.updateUser(id, user);
+        return "redirect:/admin";
     }
 
 }

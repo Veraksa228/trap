@@ -29,10 +29,10 @@ public class PostConstractClass {
     @PostConstruct
     public void addAdminAndUser() {
         Role roleAdmin = new Role();
-        roleAdmin.setName("ADMIN");
+        roleAdmin.setRoleName("ADMIN");
 
         Role roleUser = new Role();
-        roleUser.setName("USER");
+        roleUser.setRoleName("USER");
 
         roleService.addRole(roleAdmin);
         roleService.addRole(roleUser);
@@ -45,13 +45,13 @@ public class PostConstractClass {
         rolesForUser.add(roleUser);
 
         User admin = new User();
-        admin.setLogin("admin");
-        admin.setPassword("admin");
+        admin.setEmail("admin@mail.ru");
+        admin.setPassword("123");
         admin.setRoles(roles);
 
         User user = new User();
-        user.setLogin("user");
-        user.setPassword("user");
+        user.setEmail("user.mail.ru");
+        user.setPassword("123");
         user.setRoles(rolesForUser);
         userService.add(user,rolesForUser);
         userService.add(admin, roles);

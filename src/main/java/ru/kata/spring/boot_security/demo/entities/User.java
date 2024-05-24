@@ -1,7 +1,6 @@
 package ru.kata.spring.boot_security.demo.entities;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -11,67 +10,63 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-@Entity
-@Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Entity
 @Table(name = "users")
-public class User implements UserDetails {
+public class User {
+
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    @Column(name = "login", unique = true, nullable = false)
-    private String login;
-    @Column(name = "password", nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
+
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
+    @Column(name = "age")
+    private byte age;
+
+    @Column(name = "email",unique = true)
+    private String email; //
+
+    @Column(name = "password")
     private String password;
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
 
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id", nullable = false, updatable = false),
+            inverseJoinColumns = @JoinColumn(name = "role_id", nullable = false, updatable = false))
+    private Set<Role> roles = new HashSet<Role>();
 
-
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
+    public User(String firstName, String lastName, byte age, String email, String password,
+                Set<Role> roles) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
     }
 
-    @Override
-    public String getUsername() {
-        return null;
+    public String getRolesAsString() {
+        boolean first = true;
+        String s = "";
+        for (Role role : getRoles()) {
+            if (!first) {
+                s += ", ";
+            }
+            s += role.toString();
+            first = false;
+        }
+        return s;
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return false;
-    }
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, login, password, roles);
-    }
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+    public void addRole(Role role) {
+        roles.add(role);
     }
 }
