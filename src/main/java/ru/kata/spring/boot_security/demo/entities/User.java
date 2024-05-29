@@ -27,16 +27,15 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "age")
     private byte age;
 
-    @Column(name = "email", unique = true)
+    @Column(unique = true)
     private String email; //
 
     @Column(name = "password")
     private String password;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id", nullable = false, updatable = false),
             inverseJoinColumns = @JoinColumn(name = "role_id", nullable = false, updatable = false))

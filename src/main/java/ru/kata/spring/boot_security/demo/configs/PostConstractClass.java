@@ -50,7 +50,7 @@ public class PostConstractClass {
         admin.setRoles(roles);
 
         User user = new User();
-        user.setEmail("user.mail.ru");
+        user.setEmail("user@mail.ru");
         user.setPassword("123");
         user.setRoles(rolesForUser);
         userService.add(user, rolesForUser);

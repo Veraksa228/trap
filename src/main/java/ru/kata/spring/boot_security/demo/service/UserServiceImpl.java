@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-@Transactional
+
 public class UserServiceImpl implements UserService {
     private final UserDao userDao;
 
@@ -66,16 +66,11 @@ public class UserServiceImpl implements UserService {
         return userDao.getAllUsers();
     }
 
-    @Override
-    public User findUser(Long id) {
-        return userDao.findUserById(id);
-    }
-
 
     @Override
     @Transactional
-    public void updateUser(long id, User user) {
-        userDao.updateUser(id, user);
+    public void updateUser(User user) {
+        userDao.updateUser(user);
     }
 
     @Override

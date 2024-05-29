@@ -14,12 +14,12 @@ import java.security.Principal;
 @Controller
 @RequestMapping("/admin")
 @Slf4j
-public class AdminContrtoller {
+public class AdminController {
     private final UserService userService;
     private final RoleService roleService;
 
     @Autowired
-    public AdminContrtoller(UserService userService, RoleService roleService) {
+    public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
     }
@@ -52,12 +52,12 @@ public class AdminContrtoller {
     }
 
     @PostMapping("/updateUser/{id}")
-    public String updateUser(@ModelAttribute("emptyUser") User user, @PathVariable("id") Long id,
-                             @RequestParam(value = "userRolesSelector") String[] selectResult) throws Exception {
+    public String updateUser(@ModelAttribute("emptyUser") User user,
+                             @RequestParam(value = "userRolesSelector") String[] selectResult){
         for (String s : selectResult) {
             user.addRole(roleService.getRoleByName("ROLE_" + s));
         }
-        userService.updateUser(id, user);
+        userService.updateUser(user);
         return "redirect:/admin";
     }
 
