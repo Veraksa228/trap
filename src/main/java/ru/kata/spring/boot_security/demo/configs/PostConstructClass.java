@@ -14,12 +14,12 @@ import java.util.Set;
 
 @Component
 @Slf4j
-public class PostConstractClass {
+public class PostConstructClass {
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private final RoleService roleService;
 
-    public PostConstractClass(PasswordEncoder passwordEncoder, UserService userService, RoleService roleService) {
+    public PostConstructClass(PasswordEncoder passwordEncoder, UserService userService, RoleService roleService) {
         this.passwordEncoder = passwordEncoder;
         this.userService = userService;
         this.roleService = roleService;
@@ -45,12 +45,18 @@ public class PostConstractClass {
         rolesForUser.add(roleUser);
 
         User admin = new User();
+        admin.setFirstName("ADMIN");
+
+        admin.setLastName("ADMIN2");
         admin.setEmail("admin@mail.ru");
         admin.setPassword("123");
         admin.setRoles(roles);
 
         User user = new User();
         user.setEmail("user@mail.ru");
+
+        user.setFirstName("USER");
+        user.setLastName("USER2");
         user.setPassword("123");
         user.setRoles(rolesForUser);
         userService.add(user, rolesForUser);

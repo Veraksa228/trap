@@ -9,18 +9,13 @@ import java.util.Set;
 public interface UserDao {
     void add(User user);
 
+    User getUserById(long id);
 
     void removeUser(User user);
 
-
     List<User> getAllUsers();
 
-
-
-
-
     User getUserByEmail(String name);
-
 
     void updateUser(User updatedUser);
 

@@ -35,6 +35,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserById(long id) {
+        return userDao.getUserById(id);
+    }
+
+    @Override
     public User getUserByEmail(String name) {
         return userDao.getUserByEmail(name);
     }
@@ -70,6 +75,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void updateUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.updateUser(user);
     }
 

@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,9 +31,8 @@ public class User {
     private byte age;
 
     @Column(unique = true)
-    private String email; //
+    private String email;
 
-    @Column(name = "password")
     private String password;
 
     @ManyToMany
@@ -52,16 +52,9 @@ public class User {
     }
 
     public String getRolesAsString() {
-        boolean first = true;
-        String s = "";
-        for (Role role : getRoles()) {
-            if (!first) {
-                s += ", ";
-            }
-            s += role.toString();
-            first = false;
-        }
-        return s;
+        return roles.stream()
+                .map(Role::getRoleName)
+                .collect(Collectors.joining(", "));
     }
 
     public void addRole(Role role) {

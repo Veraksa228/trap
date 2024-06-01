@@ -16,11 +16,19 @@ public class UserDaoImpl implements UserDao {
     @PersistenceContext
     private EntityManager entityManager;
 
+
     @Override
 
     public void add(User user) {
         entityManager.persist(user);
 
+    }
+
+    @Override
+    public User getUserById(long id) {
+        return entityManager.createQuery("SELECT u from User u where u.id = :id", User.class)
+                .setParameter("id", id)
+                .getSingleResult();
     }
 
     public void add(User user, Set<Role> roles) {
@@ -40,7 +48,6 @@ public class UserDaoImpl implements UserDao {
     public List<User> getAllUsers() {
         return entityManager.createQuery("SELECT u FROM User u ", User.class).getResultList();
     }
-
 
 
     @Override
