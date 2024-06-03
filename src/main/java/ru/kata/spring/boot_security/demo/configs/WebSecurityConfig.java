@@ -18,19 +18,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     private final UserService userService;
+    private final SuccessUserHandler successUserHandler;
 
 
     @Autowired
-    public WebSecurityConfig(UserService userService) {
+    public WebSecurityConfig(UserService userService, SuccessUserHandler successUserHandler) {
 
         this.userService = userService;
+        this.successUserHandler = successUserHandler;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.formLogin()
                 .failureUrl("/login?error=true")
-
+                .successHandler(successUserHandler)
                 .permitAll();
 
         http.csrf().disable()
