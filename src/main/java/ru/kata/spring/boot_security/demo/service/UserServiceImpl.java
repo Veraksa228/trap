@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-
 public class UserServiceImpl implements UserService {
     private final UserDao userDao;
 
@@ -80,7 +79,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userDao.getUserByEmail(username);
         if (user == null) {

@@ -18,7 +18,6 @@ public class UserDaoImpl implements UserDao {
 
 
     @Override
-
     public void add(User user) {
         entityManager.persist(user);
 
@@ -44,7 +43,6 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-
     public List<User> getAllUsers() {
         return entityManager.createQuery("SELECT u FROM User u ", User.class).getResultList();
     }
